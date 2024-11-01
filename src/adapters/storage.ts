@@ -3,7 +3,7 @@ import { Upload } from '@aws-sdk/lib-storage'
 import { AppComponents, FetchIslandsResult } from '../types'
 
 export type IStorageComponent = {
-  store(key: string, content: Buffer, contentType: string): Promise<void>,
+  store(key: string, content: Buffer, contentType: string): Promise<void>
   fetch(key: string): Promise<Record<string, FetchIslandsResult> | null>
 }
 
@@ -15,7 +15,7 @@ export async function createStorageComponent({
 }: Pick<AppComponents, 'awsConfig' | 'config' | 'metrics' | 'logs'>): Promise<IStorageComponent> {
   const logger = logs.getLogger('storage')
   const s3 = new S3Client(awsConfig)
-  const bucket = await config.requireString('BUCKET_NAME')  
+  const bucket = await config.requireString('BUCKET_NAME')
 
   async function store(key: string, content: Buffer, contentType: string): Promise<void> {
     const upload = new Upload({
@@ -38,7 +38,7 @@ export async function createStorageComponent({
       })
 
       const response = await s3.send(command)
-      
+
       if (!response.Body) {
         logger.warn('No data found in the response Body')
         return null
@@ -57,9 +57,10 @@ export async function createStorageComponent({
 
       const contentString = await streamToString(response.Body as ReadableStream)
       return JSON.parse(contentString) as Record<string, FetchIslandsResult>
-      
     } catch (error) {
-      logger.warn('No existing log found or failed to fetch', { message: error instanceof Error ? error.message : 'Unknown error' })
+      logger.warn('No existing log found or failed to fetch', {
+        message: error instanceof Error ? error.message : 'Unknown error'
+      })
       return null
     }
   }

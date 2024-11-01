@@ -83,4 +83,3 @@ export type Islands = {
 export type FetchIslandsResult = {
   result: Array<Islands>
 } | null
-

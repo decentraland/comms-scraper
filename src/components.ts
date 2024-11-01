@@ -9,12 +9,10 @@ import { createMetricsComponent } from '@well-known-components/metrics'
 import { AppComponents, GlobalContext } from './types'
 import { metricDeclarations } from './metrics'
 import { createAwsConfig } from './adapters/aws-config'
-import { S3 } from 'aws-sdk'
 import { createStorageComponent } from './adapters/storage'
-import { createFetchComponent } from '@dcl/platform-server-commons'
+import { createFetchComponent } from './adapters/fetch'
 import { createCommsFetcher } from './adapters/comms-fetcher'
 import { createScraperComponent } from './adapters/scraper'
-
 
 // Initialize all the components of the app
 export async function initComponents(): Promise<AppComponents> {
@@ -25,11 +23,10 @@ export async function initComponents(): Promise<AppComponents> {
   const statusChecks = await createStatusCheckComponent({ server, config })
 
   const awsConfig = await createAwsConfig({ config })
-  const storage = await createStorageComponent({ awsConfig, config, metrics, logs })  
+  const storage = await createStorageComponent({ awsConfig, config, metrics, logs })
   const fetch = await createFetchComponent()
-  const commsFetcher = await createCommsFetcher({config, fetch, logs})
-  const scraper = await createScraperComponent({config, logs, storage, metrics, commsFetcher })
-
+  const commsFetcher = await createCommsFetcher({ config, fetch, logs })
+  const scraper = await createScraperComponent({ config, logs, storage, metrics, commsFetcher })
 
   await instrumentHttpServerWithPromClientRegistry({ metrics, server, config, registry: metrics.registry! })
 
@@ -38,7 +35,7 @@ export async function initComponents(): Promise<AppComponents> {
     logs,
     server,
     statusChecks,
-    metrics,    
+    metrics,
     awsConfig,
     storage,
     fetch,

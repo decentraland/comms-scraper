@@ -10,7 +10,6 @@ export async function createScraperComponent({
   metrics,
   commsFetcher
 }: Pick<AppComponents, 'config' | 'logs' | 'storage' | 'metrics' | 'commsFetcher'>): Promise<IScraperWorker> {
-  
   const logger = logs.getLogger('scrapper')
   const MAX_DAYS = 7
   const S3_KEY = 'islands-log.json'
@@ -19,10 +18,10 @@ export async function createScraperComponent({
     const timestamp = new Date().toISOString()
     try {
       const islandsData = await commsFetcher.fetchIslands()
-      
+
       if (islandsData) {
         // Fetch current log from S3
-        const currentLog = await fetchCurrentLogFromS3() || {}
+        const currentLog = (await fetchCurrentLogFromS3()) || {}
 
         // Add new data to the log
         currentLog[timestamp] = islandsData
@@ -44,7 +43,9 @@ export async function createScraperComponent({
         logger.warn(`Failed to fetch islands data at ${timestamp}`)
       }
     } catch (error) {
-      logger.error('Error during data fetching and storage', { message: error instanceof Error ? error.message : 'Unknown error' })
+      logger.error('Error during data fetching and storage', {
+        message: error instanceof Error ? error.message : 'Unknown error'
+      })
     }
   }
 
@@ -61,11 +62,13 @@ export async function createScraperComponent({
         return {} // Return an empty log
       }
     } catch (error) {
-      logger.warn('No existing log found or failed to fetch', { message: error instanceof Error ? error.message : 'Unknown error' })
+      logger.warn('No existing log found or failed to fetch', {
+        message: error instanceof Error ? error.message : 'Unknown error'
+      })
     }
     return null
   }
-  
+
   async function start(): Promise<void> {
     logger.debug('Starting data scraping')
 

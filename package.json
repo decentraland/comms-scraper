@@ -2,13 +2,17 @@
   "name": "comms-scraper",
   "scripts": {
     "build": "tsc -p tsconfig.json",
+    "build:watch": "tsc -p tsconfig.json --watch",
     "start": "node --trace-warnings --abort-on-uncaught-exception --unhandled-rejections=strict dist/index.js",
-    "test": "jest --forceExit --detectOpenHandles --coverage --verbose"
+    "test": "jest --forceExit --detectOpenHandles --coverage --verbose",
+    "lint:check": "eslint '**/*.{js,ts}'",
+    "lint:fix": "eslint '**/*.{js,ts}' --fix"
   },
   "devDependencies": {
+    "@dcl/eslint-config": "^2.2.1",
     "@types/node": "^20.11.28",
     "@well-known-components/test-helpers": "^1.5.6",
-    "typescript": "^5.4.2"
+    "typescript": "5.3.3"
   },
   "prettier": {
     "printWidth": 120,
@@ -20,7 +24,6 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.682.0",
     "@aws-sdk/lib-storage": "^3.682.0",
-    "@dcl/platform-server-commons": "^0.0.4",
     "@well-known-components/env-config-provider": "^1.2.0",
     "@well-known-components/http-server": "^2.1.0",
     "@well-known-components/interfaces": "^1.4.3",
