@@ -1,0 +1,14 @@
+dist/
+node_modules/
+**/.DS_Store
+coverage
+contents
+.env
+.env.admin
+yarn-error.log
+.vscode
+localstack
+compare
+entities
+explorer
+output
